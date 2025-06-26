@@ -1,0 +1,14 @@
+# Java
+*.class
+
+# Maven
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# STS / Eclipse
+.classpath
+.project
+.settings/
+
+# macOS
+.DS_Store
