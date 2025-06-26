@@ -1,0 +1,53 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Component Scanning -->
+	<context:component-scan base-package="com.example" />
+
+	<!-- DataSource Bean -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="oracle.jdbc.OracleDriver" />
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl1" />
+		<property name="username" value="SYS" />
+		<property name="password" value="admin@123" />
+		<property name="connectionProperties">
+			<props>
+				<prop key="internal_logon">SYSDBA</prop>  <!-- Important for SYS
+				user -->
+			</props>
+		</property>
+	</bean>
+
+	<!-- DAO Bean -->
+	<bean id="userDAO" class="com.example.dao.UserDAO">
+		<property name="dataSource" ref="dataSource" />  <!-- Corrected property
+		name -->
+	</bean>
+
+
+	<!-- Service Bean -->
+	<bean id="userService" class="com.example.service.UserService">
+		<constructor-arg ref="userDAO" />
+	</bean>
+
+	<!-- UserController Configuration -->
+	<bean id="userController" class="com.example.controller.UserController">
+		<constructor-arg ref="userService" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+			</list>
+		</property>
+	</bean>
+
+
+</beans>
